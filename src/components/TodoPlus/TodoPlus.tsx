@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Form, FormProps, Input, Space } from 'antd';
 import styled from 'styled-components'
-import { CreateTodoType, useTodoStore } from '../../store/useTodoStore';
+import { useTodoStore } from '../../store/useTodoStore';
 
 const WrapperForm = styled.div`
     margin: 20px auto;
@@ -19,7 +19,7 @@ const TodoPlus = () => {
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        const newTodo: CreateTodoType = {
+        const newTodo = {
             // id: Date.now().toString(),
             userId: 1,
             completed: false,

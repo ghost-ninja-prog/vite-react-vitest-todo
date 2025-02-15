@@ -24,21 +24,26 @@ const TodoList: React.FC<TodoListPropsType> = ({ selectedValue }) => {
 
 	const {
 		loading,
-		todos, 
-		currentPage, 
-		changeCurrentPage, 
-		loadMorePosts 
+		todos,
+		currentPage,
+		changeCurrentPage,
+		loadMorePosts
 	} = useTodoStore(state => state)
+
+	const filteredTodos = todos.filter(todo => {
+		if (selectedValue === 'all') {
+			return todo
+		} else if (selectedValue === 'completed') {
+			return todo.completed === true
+		} else if (selectedValue === 'active') {
+			return todo.completed === false
+		}
+	})
 
 	const observer = useRef<IntersectionObserver>()
 
-	// useEffect(() => {
-	//   fetchTodos()
-	// }, [])
-
 	useEffect(() => {
 		loadMorePosts(currentPage)
-		console.log('useEffect TodoList')
 	}, [currentPage])
 
 
@@ -56,36 +61,27 @@ const TodoList: React.FC<TodoListPropsType> = ({ selectedValue }) => {
 					root: document.querySelector('#listTodoRef'),
 					rootMargin: '0px',
 					threshold: 1.0
-				})
+				}
+			)
 			if (el) observer.current?.observe(el)
+
 		},
 		[loading]
 	)
 
 	return (
-		<div >
-			<WrapperTodoList id='listTodoRef'>
-				{
-					todos.filter(todo => {
-						if (selectedValue === 'all') {
-							return todo
-						} else if (selectedValue === 'completed') {
-							return todo.completed === true
-						} else if (selectedValue === 'active') {
-							return todo.completed === false
-						}
-					}).map((todo, index) => (
-						<TodoItem
+		<WrapperTodoList id='listTodoRef'>
+			{
+				filteredTodos.map((todo, index) => (
+					<TodoItem
 						key={todo.id}
 						todo={todo}
-						lastTodoElementRef={todos.length === index + 1 ? lastTodoElementRef : null}
-						/>
-					))
-				}
-				{loading && <Loader />}
-			</WrapperTodoList>
-		</div>
-
+						lastTodoElementRef={filteredTodos.length === index + 1 ? lastTodoElementRef : null}
+					/>
+				))
+			}
+			{loading && <Loader />}
+		</WrapperTodoList>
 	)
 }
 

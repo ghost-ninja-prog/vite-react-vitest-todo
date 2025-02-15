@@ -4,12 +4,6 @@ import { create } from "zustand"
 const BASE_URL = 'https://jsonplaceholder.typicode.com/todos'
 
 
-export type CreateTodoType = {
-    userId: number,
-    title: string,
-    completed: boolean
-}
-
 export type TodoType = {
     userId: number,
     id: string,
@@ -25,7 +19,7 @@ type StoreType = {
     fetchTodos: (quantity?: number) => void,
     deleteTodo: (id: string) => void,
     updateTodo: (todo: TodoType) => void,
-    createTodo: (todo: CreateTodoType) => void,
+    createTodo: (todo: Omit<TodoType, 'id'>) => void,
     changeCurrentPage: (page: number) => void,
     loadMorePosts: (page: number) => void
 }
@@ -141,29 +135,25 @@ export const useTodoStore = create<StoreType>((set, get) => ({
         try {
             set({loading: true})
             const res = await fetch(`${BASE_URL}?_page=${page}`)
-            const newTodos: TodoType[] = await res.json()
+            const fetchedTodos: TodoType[] = await res.json()
             
             set((state) => {
                 if (state.todos.length === 0) {
                     return ({
-                        todos: [...newTodos]
+                        todos: [...fetchedTodos]
                     })
                 }
-                const newTodosFilter = newTodos.filter(todo => {
+                const newTodosFiltered = fetchedTodos.filter(todo => {
                     let match = 0
-                    state.todos.forEach(oldTodo => {
-                        if (oldTodo.id === todo.id) {
+                    state.todos.forEach(t => {
+                        if (t.id === todo.id) {
                             match++
                         }
                     })
-                    if(match === 0) {
-                        return true
-                    } else {
-                        return false
-                    }
+                    return match === 0 ? true : false
                 })
                 return ({
-                    todos: [...state.todos, ...newTodosFilter]
+                    todos: [...state.todos, ...newTodosFiltered]
                 })
             })
             

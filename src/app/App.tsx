@@ -18,7 +18,6 @@ const Wrapper = styled.div`
 export const App: React.FC = () => {
 
   const [selectedValue, setSelectedValue] = useState('all')
-  console.log(selectedValue)
 
   return (
     <Wrapper>
