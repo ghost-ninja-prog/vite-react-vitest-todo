@@ -5,7 +5,7 @@ import { TodoType } from "./useTodoStore"
 type FavoritesStoreType = {
     favoritesTodo: TodoType[],
     addToFavorites: (todo: TodoType) => void,
-    deleteFromFavorites: (id: string) => void
+    deleteFromFavorites: (id: number) => void
 }
 
 export const useFavoritesStore = create<FavoritesStoreType>((set) => ({

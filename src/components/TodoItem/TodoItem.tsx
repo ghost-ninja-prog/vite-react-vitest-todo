@@ -30,6 +30,7 @@ type TodoItemProps = {
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, lastTodoElementRef }) => {
 
+
     const { deleteTodo, updateTodo } = useTodoStore(state => state)
     const { addToFavorites, deleteFromFavorites } = useFavoritesStore(state => state)
 
@@ -46,6 +47,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, lastTodoElementRef }) => {
     }
 
     const handlerClickDelete = () => {
+        deleteFromFavorites(todo.id)
         deleteTodo(todo.id)
     }
 

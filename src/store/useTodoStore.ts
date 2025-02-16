@@ -6,7 +6,7 @@ const BASE_URL = 'https://jsonplaceholder.typicode.com/todos'
 
 export type TodoType = {
     userId: number,
-    id: string,
+    id: number,
     title: string,
     completed: boolean,
     favorites?: boolean
@@ -18,7 +18,7 @@ type StoreType = {
     currentPage: number,
     totalPage: number,
     fetchTodos: (quantity?: number) => void,
-    deleteTodo: (id: string) => void,
+    deleteTodo: (id: number) => void,
     updateTodo: (todo: TodoType) => void,
     createTodo: (todo: Omit<TodoType, 'id'>) => void,
     changeCurrentPage: (page: number) => void,
