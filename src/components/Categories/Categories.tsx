@@ -24,8 +24,8 @@ const Categories: React.FC<CategoriesProps> = ({ setSelectedValue }) => {
 
   return (
     <CategoriesContainer>
-      <Radio.Group onChange={handlerChange}>
-        <Radio.Button value="all" defaultChecked>Все</Radio.Button>
+      <Radio.Group onChange={handlerChange} defaultValue='all'>
+        <Radio.Button value="all">Все</Radio.Button>
         <Radio.Button value="completed" >Выполненные</Radio.Button>
         <Radio.Button value="active">Невыполненные</Radio.Button>
         <Radio.Button value="favorites">Избранное</Radio.Button>

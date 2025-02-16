@@ -8,7 +8,8 @@ export type TodoType = {
     userId: number,
     id: string,
     title: string,
-    completed: boolean
+    completed: boolean,
+    favorites?: boolean
 }
 
 type StoreType = {
@@ -28,7 +29,7 @@ export const useTodoStore = create<StoreType>((set, get) => ({
     todos: [],
     loading: false,
     currentPage: 1,
-    totalPage: 20,
+    totalPage: 3,
     fetchTodos: async (page = 1) => {
         try{
             if (get().loading) return
@@ -136,7 +137,7 @@ export const useTodoStore = create<StoreType>((set, get) => ({
             set({loading: true})
             const res = await fetch(`${BASE_URL}?_page=${page}`)
             const fetchedTodos: TodoType[] = await res.json()
-            
+            console.log(typeof fetchedTodos[0].id)
             set((state) => {
                 if (state.todos.length === 0) {
                     return ({

@@ -3,6 +3,7 @@ import TodoItem from '../TodoItem/TodoItem'
 import styled from 'styled-components'
 import { useTodoStore } from '../../store/useTodoStore'
 import Loader from '../Loader/Loader'
+import { useFavoritesStore } from '../../store/useFavoritesStore'
 
 const WrapperTodoList = styled.div`
     display: flex;
@@ -29,6 +30,8 @@ const TodoList: React.FC<TodoListPropsType> = ({ selectedValue }) => {
 		changeCurrentPage,
 		loadMorePosts
 	} = useTodoStore(state => state)
+
+	const { favoritesTodo } = useFavoritesStore(state => state)
 
 	const filteredTodos = todos.filter(todo => {
 		if (selectedValue === 'all') {
@@ -68,15 +71,22 @@ const TodoList: React.FC<TodoListPropsType> = ({ selectedValue }) => {
 		},
 		[loading]
 	)
-
+	console.log(selectedValue)
 	return (
 		<WrapperTodoList id='listTodoRef'>
-			{
+			{ selectedValue !== 'favorites' ?
 				filteredTodos.map((todo, index) => (
 					<TodoItem
 						key={todo.id}
 						todo={todo}
 						lastTodoElementRef={filteredTodos.length === index + 1 ? lastTodoElementRef : null}
+					/>
+				))
+				: 
+				favoritesTodo.map((todo) => (
+					<TodoItem
+						key={todo.id}
+						todo={todo}
 					/>
 				))
 			}
