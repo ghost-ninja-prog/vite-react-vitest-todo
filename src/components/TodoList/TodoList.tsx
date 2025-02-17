@@ -71,7 +71,7 @@ const TodoList: React.FC<TodoListPropsType> = ({ selectedValue }) => {
 		},
 		[loading]
 	)
-	console.log(selectedValue)
+	
 	return (
 		<WrapperTodoList id='listTodoRef'>
 			{ selectedValue !== 'favorites' ?

@@ -1,9 +1,8 @@
 import { DeleteOutlined, StarOutlined } from '@ant-design/icons'
-import { Button, Checkbox, CheckboxProps, Flex, Tooltip, Typography } from 'antd'
+import { Button, Checkbox, Flex, Tooltip, Typography } from 'antd'
 import React from 'react'
-// import styled from 'styled-components'
+import styled from 'styled-components'
 import { TodoType, useTodoStore } from '../../store/useTodoStore'
-import styles from './style.module.css'
 import { useFavoritesStore } from '../../store/useFavoritesStore'
 
 const { Text } = Typography
@@ -13,29 +12,39 @@ type TodoItemProps = {
     lastTodoElementRef?: ((el: HTMLDivElement) => void) | null
 }
 
-// const WrapperTodo = styled.div`
-//     border: 1px solid rgba(0, 0, 0, .5);
-//     border-radius: 7px;
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     padding: 5px 10px;
-//     box-shadow: 1px 2px 5px rgba(0, 0, 0, .2);
-//     transition: transform .2s ease-in-out;
-//     &:hover {
-//         transform: translateY(-2px);
-//     }
+const WrapperTodo = styled.div`
+    border: 1px solid rgba(0, 0, 0, .5);
+    border-radius: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .2);
+    transition: transform .2s ease-in-out;
+    &:hover {
+        transform: translateY(-2px);
+    }
 
-// `
+`
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, lastTodoElementRef }) => {
 
 
     const { deleteTodo, updateTodo } = useTodoStore(state => state)
-    const { addToFavorites, deleteFromFavorites } = useFavoritesStore(state => state)
+    const { addToFavorites, deleteFromFavorites, updateFavoritesTodo } = useFavoritesStore(state => state)
 
-    const onChangeHandler: CheckboxProps['onChange'] = () => {
-        updateTodo({ ...todo, completed: !todo.completed })
+    const onChangeHandler = () => {
+        if(todo.favorites) {
+            updateFavoritesTodo({
+                ...todo,
+                completed: !todo.completed
+            })
+        } else {
+            updateTodo({
+                ...todo, 
+                completed: !todo.completed 
+            })
+        }
     }
 
     const handlerClickStar = () => {
@@ -51,9 +60,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, lastTodoElementRef }) => {
         deleteTodo(todo.id)
     }
 
+
+
     return (
-        <div
-            className={styles.wrapper}
+        <WrapperTodo
             ref={lastTodoElementRef}
         >
             <Flex wrap gap="small">
@@ -66,7 +76,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, lastTodoElementRef }) => {
             <Button type='primary' danger ghost onClick={handlerClickDelete}>
                 <DeleteOutlined />
             </Button>
-        </div>
+        </WrapperTodo>
     )
 }
 

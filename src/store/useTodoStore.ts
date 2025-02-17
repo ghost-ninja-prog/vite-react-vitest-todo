@@ -137,7 +137,7 @@ export const useTodoStore = create<StoreType>((set, get) => ({
             set({loading: true})
             const res = await fetch(`${BASE_URL}?_page=${page}`)
             const fetchedTodos: TodoType[] = await res.json()
-            console.log(typeof fetchedTodos[0].id)
+            
             set((state) => {
                 if (state.todos.length === 0) {
                     return ({
