@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 // const BASE_URL = 'http://localhost:3000/todos'
-const BASE_URL = 'https://jsonplaceholder.typicode.com/todos'
+export const BASE_URL = 'https://jsonplaceholder.typicode.com/todos'
 
 
 export type TodoType = {
