@@ -45,12 +45,43 @@ export const useTodoStore = create<StoreType>((set, get) => ({
     
             set((state) => ({
                 todos: [...state.todos].concat(resArray),
-                loading: false,
             }))
         } catch(error) {
-            if(error instanceof Error) {
-                console.log(error.message)
-            }
+            if(error instanceof Error) console.log(error.message)
+        } finally {
+            set({ loading: false })
+        }
+    },
+    loadMorePosts: async (page: number) => {
+        try {
+            set({loading: true})
+            const res = await fetch(`${BASE_URL}?_page=${page}`)
+            const fetchedTodos: TodoType[] = await res.json()
+            
+            set((state) => {
+                if (state.todos.length === 0) {
+                    return ({
+                        todos: [...fetchedTodos]
+                    })
+                }
+                const newTodosFiltered = fetchedTodos.filter(todo => {
+                    let match = 0
+                    state.todos.forEach(t => {
+                        if (t.id === todo.id) {
+                            match++
+                        }
+                    })
+                    return match === 0 ? true : false
+                })
+                return ({
+                    todos: [...state.todos, ...newTodosFiltered]
+                })
+            })
+            
+        } catch (error) {
+            if(error instanceof Error) console.log(error.message)
+        } finally {
+            set({loading: false})
         }
     },
     deleteTodo: async (id) => {
@@ -61,12 +92,6 @@ export const useTodoStore = create<StoreType>((set, get) => ({
             if (response.status !== 200) {
                 throw new Error(`Error delete todo, ${response.status}: ${response.statusText}`)
             }
-            // const delTodo: TodoType = await response.json()
-            // console.log(delTodo)
-            // set(state => ({
-            //     todos: state.todos.filter(todo => todo.id !== delTodo.id)
-            // }))
-
             set(state => ({
                 todos: state.todos.filter(todo => todo.id !== id)
             }))
@@ -132,36 +157,5 @@ export const useTodoStore = create<StoreType>((set, get) => ({
             currentPage: page
         })
     },
-    loadMorePosts: async (page: number) => {
-        try {
-            set({loading: true})
-            const res = await fetch(`${BASE_URL}?_page=${page}`)
-            const fetchedTodos: TodoType[] = await res.json()
-            
-            set((state) => {
-                if (state.todos.length === 0) {
-                    return ({
-                        todos: [...fetchedTodos]
-                    })
-                }
-                const newTodosFiltered = fetchedTodos.filter(todo => {
-                    let match = 0
-                    state.todos.forEach(t => {
-                        if (t.id === todo.id) {
-                            match++
-                        }
-                    })
-                    return match === 0 ? true : false
-                })
-                return ({
-                    todos: [...state.todos, ...newTodosFiltered]
-                })
-            })
-            
-        } catch (error) {
-            if(error instanceof Error) console.log(error.message)
-        } finally {
-            set({loading: false})
-        }
-    }
+    
 }))
